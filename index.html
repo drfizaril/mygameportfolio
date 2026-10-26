@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Galeri Permainan</title>
+<meta name="description" content="Koleksi permainan papan dan kad buatan sendiri untuk pelajar.">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#faf8f5; --ink:#1b1b2f; --muted:#6a6a7d; --line:#e7e2da;
+    --c1:#4338ca; --c2:#7e22ce; --c3:#e11d48;
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Barlow Semi Condensed','Arial Narrow',system-ui,sans-serif;line-height:1.55}
+  header{max-width:1100px;margin:0 auto;padding:68px 20px 22px;text-align:center}
+  .logo{display:block;margin:0 auto 18px;width:88px;height:88px}
+  .eyebrow{font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--c1)}
+  h1{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-weight:600;font-size:clamp(2.8rem,7vw,4.5rem);margin:10px 0 0;letter-spacing:.01em;line-height:1;text-transform:uppercase}
+  h1::after{content:"";display:block;width:56px;height:3px;border-radius:3px;margin:20px auto 0;background:linear-gradient(90deg,var(--c1),var(--c3))}
+  .tagline{margin:18px auto 0;max-width:540px;color:var(--muted);font-size:1.12rem}
+  .count{display:inline-block;margin-top:16px;padding:4px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--muted);font-weight:600;font-size:.8rem}
+
+  main{max-width:1100px;margin:0 auto;padding:30px 20px 70px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:30px;justify-items:center}
+
+  .card{width:100%;max-width:250px;aspect-ratio:2/3;perspective:1200px;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent}
+  .inner{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.4,.1,.2,1),filter .3s;transform-style:preserve-3d}
+  .face{position:absolute;inset:0;border-radius:var(--radius);backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    overflow:hidden;box-shadow:0 1px 2px rgba(27,27,47,.08),0 14px 30px -10px rgba(27,27,47,.28);
+    transition:visibility 0s .35s}
+  .front{background:linear-gradient(155deg,var(--c),color-mix(in srgb,var(--c) 62%,#0b0b1a));color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:22px}
+  .front::after{content:"";position:absolute;inset:10px;border:1px solid rgba(255,255,255,.28);border-radius:12px;pointer-events:none}
+  .back{background:#fff;border:1px solid var(--line);transform:rotateY(180deg);padding:22px 18px;display:flex;flex-direction:column;visibility:hidden}
+  .card.flipped .inner{transform:rotateY(180deg)}
+  .card.flipped .front{visibility:hidden}
+  .card.flipped .back{visibility:visible}
+  @media (hover:hover){
+    .card:hover .inner{transform:rotateY(180deg)}
+    .card:hover .front{visibility:hidden}
+    .card:hover .back{visibility:visible}
+    .card:not(:hover) .inner{transform:rotateY(0)}
+  }
+  .card:focus-visible .face{outline:3px solid var(--c);outline-offset:3px}
+  .card:hover{z-index:2}
+
+  .front .bg{position:absolute;inset:0;background-size:cover;background-position:center}
+  .front .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(11,11,26,.78),rgba(11,11,26,.05) 65%)}
+  .front .letter{position:absolute;top:-10px;right:6px;font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-weight:600;font-size:12rem;line-height:1;opacity:.13}
+  .front .year{position:relative;align-self:flex-start;color:rgba(255,255,255,.85);font-weight:700;font-size:.74rem;letter-spacing:.18em;margin-bottom:8px}
+  .front h2{position:relative;margin:0;font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-weight:600;font-size:2rem;line-height:1.02;letter-spacing:.01em;text-transform:uppercase;word-break:break-word}
+  .badge{position:absolute;z-index:1;top:20px;left:20px;background:#fff;color:var(--c3);font-weight:700;font-size:.66rem;padding:3px 10px;border-radius:999px;letter-spacing:.1em;text-transform:uppercase}
+
+  .back h3{margin:0 0 10px;font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-weight:600;font-size:1.5rem;line-height:1.1;letter-spacing:.01em;text-transform:uppercase;color:var(--c)}
+  .meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .meta span{font-size:.82rem;font-weight:600;border:1px solid var(--line);color:var(--muted);padding:2px 9px;border-radius:999px}
+  .desc{flex:1;overflow-y:auto;font-size:1rem;color:#3a3a50;padding-right:6px;scrollbar-width:thin;scrollbar-color:var(--c) transparent;white-space:pre-line}
+  .desc::-webkit-scrollbar{width:5px}
+  .desc::-webkit-scrollbar-thumb{background:var(--c);border-radius:6px}
+  .link{margin-top:12px;display:block;text-align:center;background:var(--c);color:#fff;text-decoration:none;font-weight:700;padding:9px;border-radius:10px;font-size:.95rem;letter-spacing:.04em}
+  .link:hover{filter:brightness(1.1)}
+
+  .filters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 0 34px}
+  .chip{font:inherit;font-weight:600;font-size:.95rem;letter-spacing:.03em;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);padding:6px 16px;border-radius:999px;transition:background .2s,color .2s,border-color .2s}
+  .chip b{font-weight:600;color:var(--muted);margin-left:4px}
+  .chip:hover{border-color:var(--c1)}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .chip.on b{color:rgba(255,255,255,.7)}
+  .chip:focus-visible{outline:3px solid var(--c1);outline-offset:2px}
+
+  .state{text-align:center;color:var(--muted);padding:40px 0}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 20px 40px;border-top:1px solid var(--line);max-width:1100px;margin:0 auto}
+  @media (prefers-reduced-motion:reduce){.inner{transition:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <img class="logo" src="logo.png" alt="Logo" width="88" height="88">
+  <div class="eyebrow">Koleksi Reka Bentuk</div>
+  <h1>Galeri Permainan</h1>
+  <p class="tagline" id="tagline"></p>
+  <span class="count" id="count" hidden></span>
+</header>
+
+<main>
+  <nav class="filters" id="filters" aria-label="Tapis permainan" hidden></nav>
+  <div class="grid" id="grid" aria-live="polite"></div>
+  <p class="state" id="state">Memuatkan permainan…</p>
+</main>
+
+<footer id="footer"></footer>
+
+<script>
+/* ============ TETAPAN (edit di sini sahaja) ============ */
+const CONFIG = {
+  tagline: "Permainan buatan sendiri untuk pelajar Kolej Matrikulasi Perak, dari tahun 2017 hingga kini.",
+  footer:  "© Nama Awak · Kolej Matrikulasi Perak",
+  // Tampal pautan "Publish to web → CSV" dari Google Sheets di sini.
+  // Kalau kosong, data contoh di bawah akan dipaparkan.
+  SHEET_CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWoUw1opjxKAbiEPinwlo5TTb2hBoNDhQXeYnJwllilMJ9cuS-o653QIj2kVxS19b4Z8xhKy8O1YOy/pub?gid=1042681615&single=true&output=csv"
+};
+
+/* Senarai awal (dipaparkan jika Google Sheets belum disambung) */
+const SAMPLE = [
+  {"tajuk": "MooV", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Ya"},
+  {"tajuk": "Tatodagi", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Ya"},
+  {"tajuk": "Polipen", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Ya"},
+  {"tajuk": "Beng-Venture", "tahun": "", "pemain": "", "masa": "", "status": "Dalam Pembinaan", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "Tempat Kita Ada", "tahun": "", "pemain": "", "masa": "", "status": "Dalam Pembinaan", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "Roasted", "tahun": "", "pemain": "", "masa": "", "status": "Dalam Pembinaan", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "ProNaja X", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "Kekuatan Ingatan (KI)", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "ProNaja J", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "SECURE 853", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "40 Rabbana", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "T-BAC", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "Kuda Longkang", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "Kad NSQ", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "Pronaja X2", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "KS Tatodagi", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "Kad Jiran 9", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "FlipFox", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Papan/Kad", "ipo": "Tidak"},
+  {"tajuk": "SoC", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Digital", "ipo": "Tidak"},
+  {"tajuk": "Jungle Tile Flip", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Digital", "ipo": "Tidak"},
+  {"tajuk": "Flower of Peace", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Digital", "ipo": "Tidak"},
+  {"tajuk": "Shadow Warrior", "tahun": "", "pemain": "", "masa": "", "status": "Siap", "penerangan": "", "gambar": "", "pautan": "", "jenis": "Digital", "ipo": "Tidak"}
+];
+
+/* ============ KOD ============ */
+const COLORS = ["--c1","--c2","--c3"];
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safeUrl = u => /^(https?:\/\/|#)/i.test((u||"").trim()) ? u.trim() : "";
+// Imej: benarkan pautan penuh (https://...) atau laluan dalam folder yang sama, contohnya gambar/moov.jpg
+const imgUrl = u => { u=(u||"").trim(); return /^https?:\/\//i.test(u) || /^[\w\-.\/]+$/.test(u) ? u : ""; };
+const isNew = g => /bina|baharu|baru|progress/i.test(g.status || "");
+
+function parseCSV(text){
+  const rows=[]; let row=[], cell="", q=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if(q){
+      if(ch=='"' && text[i+1]=='"'){cell+='"';i++}
+      else if(ch=='"'){q=false}
+      else cell+=ch;
+    }else if(ch=='"'){q=true}
+    else if(ch==","){row.push(cell);cell=""}
+    else if(ch=="\n"||ch=="\r"){
+      if(ch=="\r"&&text[i+1]=="\n")i++;
+      row.push(cell);cell="";
+      if(row.some(c=>c.trim()!==""))rows.push(row);
+      row=[];
+    }else cell+=ch;
+  }
+  row.push(cell); if(row.some(c=>c.trim()!==""))rows.push(row);
+  if(!rows.length) return [];
+  const head=rows.shift().map(h=>h.trim().toLowerCase());
+  return rows.map(r=>Object.fromEntries(head.map((h,i)=>[h,(r[i]||"").trim()])));
+}
+
+const isIpo = g => /^(ya|y|yes|1|true|berdaftar)/i.test((g.ipo||"").trim());
+const isDigital = g => /digital/i.test(g.jenis||"");
+const FILTERS = [
+  {k:"semua",   t:"Semua",           f:()=>true},
+  {k:"ipo",     t:"Berdaftar MyIPO", f:isIpo},
+  {k:"baru",    t:"Dalam Pembinaan", f:isNew},
+  {k:"papan",   t:"Papan & Kad",     f:g=>!isDigital(g)},
+  {k:"digital", t:"Digital",         f:isDigital}
+];
+let ALL=[];
+
+function setup(games){
+  // Dalam pembinaan dahulu, kemudian berdaftar MyIPO, kemudian tahun terbaru
+  ALL = games.slice().sort((a,b)=> (isNew(b)-isNew(a)) || (isIpo(b)-isIpo(a)) || ((+b.tahun||0)-(+a.tahun||0)));
+  const nav=$("#filters");
+  const avail=FILTERS.filter(x=>x.k==="semua"||ALL.some(x.f));
+  nav.innerHTML = avail.length>2 ? avail.map(x=>`<button type="button" class="chip" data-k="${x.k}" aria-pressed="false">${esc(x.t)} <b>${ALL.filter(x.f).length}</b></button>`).join("") : "";
+  nav.hidden = !nav.innerHTML;
+  const c=$("#count"); c.hidden=!ALL.length; c.textContent=`${ALL.length} tajuk permainan`;
+  pick("semua");
+}
+
+function pick(k){
+  const fl=FILTERS.find(x=>x.k===k)||FILTERS[0];
+  document.querySelectorAll(".chip").forEach(b=>{const on=b.dataset.k===fl.k;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on)});
+  draw(ALL.filter(fl.f));
+}
+
+function draw(games){
+  const grid=$("#grid");
+  grid.innerHTML = games.map((g,i)=>{
+    const color = `var(${COLORS[i%COLORS.length]})`;
+    const img = imgUrl(g.gambar);
+    const link = safeUrl(g.pautan);
+    const meta = [g.jenis&&esc(g.jenis), g.pemain&&`${esc(g.pemain)} pemain`, g.masa&&esc(g.masa), g.tahun&&esc(g.tahun)].filter(Boolean).map(m=>`<span>${m}</span>`).join("");
+    const letter = esc((g.tajuk||"?").charAt(0).toUpperCase());
+    const badge = isNew(g) ? esc(g.status) : (isIpo(g) ? "Berdaftar MyIPO" : "");
+    return `
+    <div class="card" tabindex="0" role="button" aria-label="${esc(g.tajuk)} — tekan untuk lihat butiran" style="--c:${color}">
+      <div class="inner">
+        <div class="face front">
+          ${img?`<div class="bg" style="background-image:url('${esc(img)}')"></div><div class="shade"></div>`:`<div class="letter">${letter}</div>`}
+          ${badge?`<div class="badge">${badge}</div>`:""}
+          ${g.tahun?`<div class="year">${esc(g.tahun)}</div>`:""}
+          <h2>${esc(g.tajuk)}</h2>
+        </div>
+        <div class="face back">
+          <h3>${esc(g.tajuk)}</h3>
+          <div class="meta">${meta}</div>
+          <div class="desc" tabindex="-1">${g.penerangan?esc(g.penerangan):"Butiran akan dikemas kini tidak lama lagi."}</div>
+          ${link?`<a class="link" href="${esc(link)}" target="_blank" rel="noopener">${isDigital(g)?"Main sekarang":"Lihat butiran"} →</a>`:""}
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+  $("#state").hidden = games.length>0;
+  if(!games.length) $("#state").textContent="Belum ada permainan untuk dipaparkan.";
+}
+
+document.addEventListener("click",e=>{const b=e.target.closest(".chip"); if(b) pick(b.dataset.k);});
+
+// Kad: tekan/ketik untuk flip (sentuh), Enter/Space (papan kekunci)
+const canHover = matchMedia("(hover:hover)").matches;
+$("#grid").addEventListener("click",e=>{
+  if(canHover || e.target.closest("a")) return;
+  const card=e.target.closest(".card"); if(!card) return;
+  if(e.target.closest(".desc") && card.classList.contains("flipped")) return;
+  document.querySelectorAll(".card.flipped").forEach(c=>{if(c!==card)c.classList.remove("flipped")});
+  card.classList.toggle("flipped");
+});
+$("#grid").addEventListener("keydown",e=>{
+  if(e.target.classList.contains("card") && (e.key==="Enter"||e.key===" ")){
+    e.preventDefault(); e.target.classList.toggle("flipped");
+  }
+});
+
+async function init(){
+  $("#tagline").textContent=CONFIG.tagline;
+  $("#footer").textContent=CONFIG.footer;
+  let games=SAMPLE;
+  if(CONFIG.SHEET_CSV_URL){
+    try{
+      const res=await fetch(CONFIG.SHEET_CSV_URL,{cache:"no-store"});
+      if(!res.ok) throw new Error(res.status);
+      games=parseCSV(await res.text()).filter(g=>g.tajuk);
+    }catch(err){
+      console.warn("Gagal baca Google Sheets, guna data contoh.",err);
+    }
+  }
+  setup(games);
+}
+init();
+</script>
+</body>
+</html>
